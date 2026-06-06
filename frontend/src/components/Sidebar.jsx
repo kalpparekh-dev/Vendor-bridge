@@ -10,22 +10,30 @@ import {
 } from "react-icons/fa";
 
 function Sidebar() {
-  const items = [
-    { name: "Dashboard", path: "/dashboard", icon: <FaChartPie /> },
-    { name: "Vendors", path: "/vendors", icon: <FaUsers /> },
-    { name: "RFQs", path: "/rfqs", icon: <FaClipboardList /> },
-    { name: "Quotations", path: "/quotations", icon: <FaFileInvoice /> },
-    { name: "Approvals", path: "/approvals", icon: <FaCheckCircle /> },
-    { name: "Purchase Orders", path: "/purchase-orders", icon: <FaShoppingCart /> },
-    { name: "Invoices", path: "/invoices", icon: <FaFileInvoice /> },
-    { name: "Activity Logs", path: "/logs", icon: <FaHistory /> },
+  const user = JSON.parse(localStorage.getItem("user")) || {};
+  const role = user.role || "admin";
+
+  const allItems = [
+    { name: "Dashboard", path: "/dashboard", icon: <FaChartPie />, roles: ["admin", "procurement_officer", "manager", "vendor"] },
+    { name: "Vendors", path: "/vendors", icon: <FaUsers />, roles: ["admin", "procurement_officer"] },
+    { name: "RFQs", path: "/rfqs", icon: <FaClipboardList />, roles: ["admin", "procurement_officer", "vendor"] },
+    { name: "Quotations", path: "/quotations", icon: <FaFileInvoice />, roles: ["admin", "procurement_officer", "vendor"] },
+    { name: "Approvals", path: "/approvals", icon: <FaCheckCircle />, roles: ["admin", "manager"] },
+    { name: "Purchase Orders", path: "/purchase-orders", icon: <FaShoppingCart />, roles: ["admin", "procurement_officer"] },
+    { name: "Invoices", path: "/invoices", icon: <FaFileInvoice />, roles: ["admin", "procurement_officer", "vendor"] },
+    { name: "Reports", path: "/reports", icon: <FaChartPie />, roles: ["admin", "manager"] },
+    { name: "Activity Logs", path: "/logs", icon: <FaHistory />, roles: ["admin"] },
   ];
+
+  const items = allItems.filter((item) => item.roles.includes(role));
 
   return (
     <aside className="fixed left-0 top-0 h-screen w-72 bg-white/10 backdrop-blur-xl border-r border-white/10 p-6">
-      <h1 className="text-2xl font-bold mb-10">
+      <h1 className="text-2xl font-bold mb-2">
         Vendor<span className="text-cyan-400">Bridge</span>
       </h1>
+
+      <p className="text-gray-400 mb-8 capitalize">{role.replace("_", " ")}</p>
 
       <nav className="space-y-3">
         {items.map((item) => (
